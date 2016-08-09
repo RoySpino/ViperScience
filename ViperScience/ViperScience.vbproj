@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Chemistry.vb" />
     <Compile Include="formula.vb" />
+    <Compile Include="Hydra.vb" />
     <Compile Include="Module1.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

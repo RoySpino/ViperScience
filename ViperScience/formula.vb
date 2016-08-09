@@ -3,6 +3,7 @@
     Private mol As Double
     Private ElCnt As Integer
     Private elementsInFoumula As List(Of String)
+    Private formulaStr As String
     Private pt As List(Of elements) = New List(Of elements)
 
     ' /////////////////////////////////////////////////////////////////////////
@@ -31,6 +32,7 @@
         mol = findMol(raw)
         ElCnt = 0
         elementsInFoumula = getElements(raw)
+        formulaStr = raw
     End Sub
 
     ' /////////////////////////////////////////////////////////////////////////
@@ -262,4 +264,43 @@
     Public Function getMol() As Double
         Return mol
     End Function
+
+    ' /////////////////////////////////////////////////////////////////////////
+    Sub assign(raw As String)
+        mol = findMol(raw)
+        ElCnt = 0
+        elementsInFoumula = getElements(raw)
+        formulaStr = raw
+    End Sub
+
+    ' /////////////////////////////////////////////////////////////////////////
+    Sub assign(raw As formula)
+        mol = findMol(raw.formulaStr)
+        ElCnt = 0
+        elementsInFoumula = getElements(raw.formulaStr)
+        formulaStr = raw.formulaStr
+    End Sub
+
+    ' /////////////////////////////////////////////////////////////////////////
+    ' ////////////////////////////////////////////////////////////////////////
+    ' ///////////////////////////////////////////////////////////////////////
+
+    Public Shared Operator =(ByVal A As formula, ByVal B As String) As Boolean
+        Return A.formulaStr = B
+    End Operator
+
+    ' /////////////////////////////////////////////////////////////////////////
+    Public Shared Operator =(ByVal A As String, ByVal B As formula) As Boolean
+        Return A = B.formulaStr
+    End Operator
+
+    ' /////////////////////////////////////////////////////////////////////////
+    Public Shared Operator <>(ByVal A As formula, ByVal B As String) As Boolean
+        Return A.formulaStr <> B
+    End Operator
+
+    ' /////////////////////////////////////////////////////////////////////////
+    Public Shared Operator <>(ByVal A As String, ByVal B As formula) As Boolean
+        Return A <> B.formulaStr
+    End Operator
 End Class
