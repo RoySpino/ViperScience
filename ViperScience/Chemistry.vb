@@ -9,7 +9,7 @@
         Dim sel As String
 
         While True
-            Console.Write("Viper_>Chem: ")
+            Console.Write(vbNewLine & "Viper_>Chem: ")
             sel = Console.ReadLine()
             sel = sel.ToLower()
 
@@ -44,26 +44,25 @@
         Console.WriteLine("")
     End Sub
 
+    ' /////////////////////////////////////////////////////////////////////////
     Function ChemistryStoichMain() As String
         Dim sel As String
         Dim input As String
         Dim el As List(Of String)
         While True
-            Console.Write("Viper_Chem_>Stoichiometry: ")
+            Console.Write(vbNewLine & "Viper_Chem_>Stoichiometry: ")
             sel = Console.ReadLine()
             sel = sel.ToLower()
 
             Select Case sel
                 Case "molmas"
+                    Console.Write(
+                        vbNewLine & "    Enter the formula of the compound: ")
                     input = Console.ReadLine()
                     Dim form As formula = New formula(input)
                     'el = form.getElements()
-                    Console.WriteLine(form.getMol())
-
-                    'For i As Integer = 0 To el.Count - 1
-                    '    Console.WriteLine(el(i))
-                    'Next
-
+                    Console.WriteLine(
+                        "the molar weight of the compound is: " & form.getMol())
                 Case "exit"
                     Return ""
             End Select
@@ -72,16 +71,20 @@
                 Console.WriteLine(
                     "_________________________________________________________")
                 Console.WriteLine(
-                    String.Format("{0,15} {1,40}",
-                                  "masprnt", "find mass precent of the compound"))
+                    String.Format("{0,15} {1,40}", "masprnt",
+                                  "find mass precent of the compound"))
                 Console.WriteLine(
-                    String.Format("{0,15} {1,40}", "molformla", "find muleculer formula"))
+                    String.Format("{0,15} {1,40}", "molformla",
+                                  "find muleculer formula"))
                 Console.WriteLine(
-                    String.Format("{0,15} {1,40}", "molmas", "find molar mass of compound"))
+                    String.Format("{0,15} {1,40}", "molmas",
+                                  "find molar mass of compound"))
                 Console.WriteLine(
-                    String.Format("{0,15} {1,40}", "limreac", "find limiting reactant"))
+                    String.Format("{0,15} {1,40}", "limreac",
+                                  "find limiting reactant"))
                 Console.WriteLine(
-                    String.Format("{0,15} {1,40}", "calc", "simple calculater"))
+                    String.Format("{0,15} {1,40}", "calc",
+                                  "simple calculater"))
                 Console.WriteLine(
                     String.Format("{0,15} {1,40}", "clear", "Clear screen"))
                 Console.WriteLine(

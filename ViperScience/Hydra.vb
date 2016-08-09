@@ -18,6 +18,7 @@ Public Class Hydra
         End Sub
     End Class
 
+    ' /////////////////////////////////////////////////////////////////////////
     Protected Class body
         Public headRoot As head
         Public nxt As body
@@ -30,6 +31,7 @@ Public Class Hydra
         End Sub
     End Class
 
+    ' /////////////////////////////////////////////////////////////////////////
     Private Sub setupArray()
         Dim data As String
         Dim line() As String
@@ -67,6 +69,7 @@ Public Class Hydra
         Next
     End Sub
 
+    ' /////////////////////////////////////////////////////////////////////////
     Private Sub add(dir As String,
                     programName As String,
                     isLike As String)

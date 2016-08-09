@@ -191,21 +191,29 @@
         Dim indexOfLastSym As Integer = 0
         Dim cnt As Integer = 1
 
+        ' add end character
+        rawFormula &= "#"
+
+        ' get complex compounds
+        If rawFormula.Contains("*") Then
+            ret += findMol(rawFormula.Split("*")(1))
+        End If
+        If rawFormula.Contains("(") Then
+            ret += findMol(rawFormula.Split("(")(1))
+        End If
+
+        ' break formula down
         For i As Integer = 0 To rawFormula.Length - 1
-            If ((i > 0 And
-                Asc(rawFormula(i)) >= 65 And Asc(rawFormula(i)) <= 90) And
-                (Asc(rawFormula(i - 1)) >= 97 And Asc(rawFormula(i - 1)) <= 122 Or
-                Asc(rawFormula(i - 1)) >= 48 And Asc(rawFormula(i - 1)) <= 57)) Or
-                (i + 1) > rawFormula.Length Then
+            If (i > 0 And Asc(rawFormula(i)) >= 65 And
+                Asc(rawFormula(i)) <= 90) Or rawFormula(i) = "#" Then
 
                 Try
-                    cnt = Convert.ToInt32(ecnt)
+                    cnt = Convert.ToDouble(ecnt)
                 Catch ex As Exception
                     cnt = 1
                 End Try
 
                 ret += getWeight(tmp) * cnt
-
                 tmp = ""
                 ecnt = ""
             End If

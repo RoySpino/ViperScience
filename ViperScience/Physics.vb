@@ -52,7 +52,7 @@
         Dim sel As String
 
         While True
-            Console.Write("Viper_>Phys: ")
+            Console.Write(vbNewLine & "Viper_>Phys: ")
             sel = Console.ReadLine()
             sel = sel.ToLower()
 
@@ -92,7 +92,7 @@
         Dim sel As String
 
         While True
-            Console.Write("Viper_Science_Physics_>Const-Acc: ")
+            Console.Write(vbNewLine & "Viper_Science_Physics_>Const-Acc: ")
             sel = Console.ReadLine()
             sel = sel.ToLower()
 
