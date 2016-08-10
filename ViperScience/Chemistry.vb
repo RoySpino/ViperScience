@@ -2,6 +2,10 @@
     Private res As resources = New resources("chem")
 
 #Region "Public working functions"
+    Public Function molmas(compound As String)
+        Dim form As formula = New formula(compound)
+        Return form.getMol()
+    End Function
 #End Region
 
 #Region "public directory functions"
@@ -59,11 +63,10 @@
                     Console.Write(
                         vbNewLine & "    Enter the formula of the compound: ")
                     input = Console.ReadLine()
-                    Dim form As formula = New formula(input)
-                    'el = form.getElements()
+
                     Console.WriteLine(
-                        "the molar weight of the compound is: " & form.getMol())
-                Case "exit"
+                        "the molar weight of the compound is: " & molmas(input))
+                Case "cd"
                     Return ""
             End Select
 

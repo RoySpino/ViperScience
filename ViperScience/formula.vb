@@ -190,30 +190,59 @@
         Dim ecnt As String = ""
         Dim indexOfLastSym As Integer = 0
         Dim cnt As Integer = 1
+        Dim arr() As String
 
-        ' add end character
-        rawFormula &= "#"
-
-        ' get complex compounds
+        ' handle complex compounds
         If rawFormula.Contains("*") Then
-            ret += findMol(rawFormula.Split("*")(1))
+            arr = rawFormula.Split("*")
+            For i As Integer = 0 To arr(1).Length
+                If Asc(arr(1)(i)) >= 48 And Asc(arr(1)(i)) <= 57 Then
+                    ecnt &= arr(1)(i)
+                Else
+                    Exit For
+                End If
+            Next
+            ret += findMol(arr(1)) * strToI(ecnt)
+            rawFormula = arr(0)
+            ecnt = ""
+        End If
+        If rawFormula.Contains(".") Then
+            arr = rawFormula.Split(".")
+            For i As Integer = 0 To arr(1).Length
+                If Asc(arr(1)(i)) >= 48 And Asc(arr(1)(i)) <= 57 Then
+                    ecnt &= arr(1)(i)
+                Else
+                    Exit For
+                End If
+            Next
+            ret += findMol(arr(1)) * strToI(ecnt)
+            rawFormula = arr(0)
+            ecnt = ""
         End If
         If rawFormula.Contains("(") Then
-            ret += findMol(rawFormula.Split("(")(1))
+            arr = rawFormula.Split("(")
+            For i As Integer = arr(1).Length - 1 To 0 Step -1
+                If Asc(arr(1)(i)) >= 48 And Asc(arr(1)(i)) <= 57 Then
+                    ecnt &= arr(1)(i)
+                Else
+                    Exit For
+                End If
+            Next
+            arr(1) = arr(1).Substring(0, arr(1).IndexOf(")"))
+            ret += findMol(arr(1)) * strToI(ecnt)
+            rawFormula = arr(0)
+            ecnt = ""
         End If
+
+        ' add end check character
+        rawFormula &= "#"
 
         ' break formula down
         For i As Integer = 0 To rawFormula.Length - 1
             If (i > 0 And Asc(rawFormula(i)) >= 65 And
                 Asc(rawFormula(i)) <= 90) Or rawFormula(i) = "#" Then
 
-                Try
-                    cnt = Convert.ToDouble(ecnt)
-                Catch ex As Exception
-                    cnt = 1
-                End Try
-
-                ret += getWeight(tmp) * cnt
+                ret += getWeight(tmp) * strToI(ecnt)
                 tmp = ""
                 ecnt = ""
             End If
@@ -288,6 +317,14 @@
         elementsInFoumula = getElements(raw.formulaStr)
         formulaStr = raw.formulaStr
     End Sub
+
+    Private Function strToI(s As String)
+        Try
+            Return Int(Convert.ToDouble(s))
+        Catch ex As Exception
+            Return 1
+        End Try
+    End Function
 
     ' /////////////////////////////////////////////////////////////////////////
     ' ////////////////////////////////////////////////////////////////////////
