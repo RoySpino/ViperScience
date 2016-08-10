@@ -61,7 +61,8 @@
             End If
 
             Select Case sel
-                Case "constAcc"
+                Case "constacc"
+                    consAccMain()
                 Case "help"
                     help()
                 Case "ls"
@@ -89,19 +90,39 @@
 
     ' /////////////////////////////////////////////////////////////////////////
     Private Sub consAccMain()
-        Dim sel As String
+        Dim sel, tmp As String
+        Dim t, vi, vf As Double
+        Dim a, xi, xf As Double
 
         While True
-            Console.Write(vbNewLine & "Viper_Science_Physics_>Const-Acc: ")
+            Console.Write(vbNewLine & "Viper_Science_Physics_>constantAccel: ")
             sel = Console.ReadLine()
             sel = sel.ToLower()
 
+            If sel = "help" Or sel = "ls" Then
+                Console.WriteLine(
+            "_________________________________________________________")
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}",
+                                  "fvelotim", "final velocity from time"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}",
+                                  "ivelotim", "inical velocity from time"))
+
+            End If
+
             Select Case sel
-                Case "constAcc"
-                Case "help"
-                    help()
-                Case "ls"
-                    help()
+                Case "fvelotim"
+                    Console.Write("    Enter acceleration:     ")
+                    a = res.strToD(Console.ReadLine())
+                    Console.Write("    Enter total time:       ")
+                    t = res.strToD(Console.ReadLine())
+                    Console.Write("    Enter initial velocity: ")
+                    vi = res.strToD(Console.ReadLine())
+
+                    vf = consAcc_FITVA(vi, t, a)
+                    Console.WriteLine("Final velocity is: " & vf & vbNewLine)
+                Case "ivelotim"
                 Case "cd"
                     Exit While
             End Select

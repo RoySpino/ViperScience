@@ -78,4 +78,12 @@
 
         Return ""
     End Function
+
+    Public Function strToD(raw As String) As Double
+        Try
+            Return Convert.ToDouble(raw)
+        Catch ex As Exception
+            Return 0
+        End Try
+    End Function
 End Class
