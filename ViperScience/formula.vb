@@ -165,7 +165,6 @@
     Private Function getElements(rawFormula As String) As List(Of String)
         Dim ret As List(Of String) = New List(Of String)()
         Dim tmp As String = ""
-        Dim indexOfLastSym As Integer = 0
         Dim cnt As Integer = 0
 
         For i As Integer = 0 To rawFormula.Length - 1
@@ -188,7 +187,6 @@
         Dim ret As Double = 0
         Dim tmp As String = ""
         Dim ecnt As String = ""
-        Dim indexOfLastSym As Integer = 0
         Dim cnt As Integer = 1
         Dim arr() As String
 
@@ -257,6 +255,49 @@
         Return ret
     End Function
 
+    ' /////////////////////////////////////////////////////////////////////////
+    Private Function findMasPcnt(rawFormula As String) As Double
+
+        For i As Integer = 0 To elementsInFoumula.Count
+            If elementsInFoumula(i) = 
+        Next
+    End Function
+
+    ' /////////////////////////////////////////////////////////////////////////
+    Private Function elementCount(element As String, compound As String) As Double
+        Dim ret As Double = 0
+        Dim tmp As String = ""
+        Dim ecnt As String = ""
+        Dim cnt As Integer = 1
+        'Dim arr() As String
+
+
+        ' add end check character
+        compound &= "#"
+
+        ' break formula down
+        For i As Integer = 0 To compound.Length - 1
+            If (i > 0 And Asc(compound(i)) >= 65 And
+                Asc(compound(i)) <= 90) Or compound(i) = "#" Then
+
+                If tmp = element Then
+                    ret += strToI(ecnt)
+                    tmp = ""
+                    ecnt = ""
+                End If
+            End If
+
+            ' add characters to produce element symbol
+            If Asc(compound(i)) < 48 Or Asc(compound(i)) > 57 Then
+                tmp &= compound(i)
+            Else
+                ' add characters to produce number of elements
+                ecnt &= compound(i)
+            End If
+        Next
+
+        Return ret
+    End Function
     ' /////////////////////////////////////////////////////////////////////////
     Private Function getWeight(sym As String) As Double
         Dim min, mid, max As Integer

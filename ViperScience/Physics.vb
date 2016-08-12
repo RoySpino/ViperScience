@@ -43,6 +43,10 @@
                                   acc As Double) As Double
         Return (finalVel - initVel) / acc
     End Function
+
+    Public Function spring_joule()
+
+    End Function
 #End Region
 
 #Region "public directory functions"
