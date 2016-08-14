@@ -86,4 +86,60 @@
             Return 0
         End Try
     End Function
+
+    Public Function calc(rawLine As String)
+        Dim arr() As String
+        Dim action As String
+        Dim tmp1, tmp2 As String
+
+        ' get action and split the string
+        If rawLine.Contains("*") Then
+            action = "mult"
+            arr = rawLine.Split("*")
+        ElseIf rawLine.Contains("/") Then
+            action = "div"
+            arr = rawLine.Split("/")
+        ElseIf rawLine.Contains("+") Then
+            action = "add"
+            arr = rawLine.Split("+")
+        Else
+            action = "sub"
+            arr = rawLine.Split("-")
+        End If
+
+        tmp1 = ""
+        tmp2 = ""
+
+        ' convert both the string to a number filtering 
+        ' out non numeric characters
+        For i As Integer = 0 To arr(0).Length - 1
+            If Asc(arr(0)(i)) >= 48 And Asc(arr(0)(i)) <= 57 Or
+                Asc(arr(0)(i)) = 46 Then
+                tmp1 &= arr(0)(i)
+            End If
+        Next
+
+        For i As Integer = 0 To arr(1).Length - 1
+            If Asc(arr(1)(i)) >= 48 And Asc(arr(1)(i)) <= 57 Or
+                Asc(arr(0)(i)) = 46 Then
+                tmp2 &= arr(1)(i)
+            End If
+        Next
+
+        ' preform operation
+        Select Case action
+            Case "mult"
+                Return Convert.ToDouble(tmp1) *
+                    Convert.ToDouble(tmp2)
+            Case "div"
+                Return Convert.ToDouble(tmp1) /
+                    Convert.ToDouble(tmp2)
+            Case "add"
+                Return Convert.ToDouble(tmp1) +
+                    Convert.ToDouble(tmp2)
+            Case Else
+                Return Convert.ToDouble(tmp1) -
+                    Convert.ToDouble(tmp2)
+        End Select
+    End Function
 End Class

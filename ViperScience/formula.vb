@@ -3,8 +3,10 @@
     Private mol As Double
     Private ElCnt As Integer
     Private elementsInFoumula As List(Of String)
+
     Private formulaStr As String
     Private pt As List(Of elements) = New List(Of elements)
+    Private maspct As List(Of elements) = New List(Of elements)
 
     ' /////////////////////////////////////////////////////////////////////////
     Private Class elements
@@ -166,14 +168,30 @@
         Dim ret As List(Of String) = New List(Of String)()
         Dim tmp As String = ""
         Dim cnt As Integer = 0
+        Dim addToList As Boolean = True
 
         For i As Integer = 0 To rawFormula.Length - 1
             If (i > 0 And Asc(rawFormula(i)) >= 65 And
                 Asc(rawFormula(i)) <= 90) Or (i + 1) = rawFormula.Length Then
-                ret.Add(tmp)
-                tmp = ""
+
+                ' set boolean to true only if the element is not in the list
+                For u As Integer = 0 To ret.Count - 1
+                    If tmp = ret(u) Then
+                        addToList = False
+                        Exit For
+                    Else
+                        addToList = True
+                    End If
+                Next
+
+                ' if boolean is true the add to the list
+                If addToList = True Then
+                    ret.Add(tmp)
+                    tmp = ""
+                End If
             End If
 
+            ' add characters to produce element symbol
             If Asc(rawFormula(i)) < 48 Or Asc(rawFormula(i)) > 57 Then
                 tmp &= rawFormula(i)
             End If
@@ -245,9 +263,11 @@
                 ecnt = ""
             End If
 
+            ' add characters to produce element symbol
             If Asc(rawFormula(i)) < 48 Or Asc(rawFormula(i)) > 57 Then
                 tmp &= rawFormula(i)
             Else
+                ' add characters to produce number of elements
                 ecnt &= rawFormula(i)
             End If
         Next
@@ -256,12 +276,17 @@
     End Function
 
     ' /////////////////////////////////////////////////////////////////////////
-    Private Function findMasPcnt(rawFormula As String) As Double
+    Private Sub findMasPcnt(rawFormula As String)
+        Dim ret As Double = 0
 
         For i As Integer = 0 To elementsInFoumula.Count
-            If elementsInFoumula(i) = 
+            ret = getWeight(elementsInFoumula(i)) *
+                elementCount(elementsInFoumula(i), rawFormula)
+
+            maspct.Add(New elements(elementsInFoumula(i), ret))
         Next
-    End Function
+
+    End Sub
 
     ' /////////////////////////////////////////////////////////////////////////
     Private Function elementCount(element As String, compound As String) As Double
@@ -359,12 +384,18 @@
         formulaStr = raw.formulaStr
     End Sub
 
+    ' /////////////////////////////////////////////////////////////////////////
     Private Function strToI(s As String)
         Try
             Return Int(Convert.ToDouble(s))
         Catch ex As Exception
             Return 1
         End Try
+    End Function
+
+    ' /////////////////////////////////////////////////////////////////////////
+    Public Function getmasprcnt()
+        Return maspct
     End Function
 
     ' /////////////////////////////////////////////////////////////////////////
