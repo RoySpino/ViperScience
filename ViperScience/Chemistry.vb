@@ -21,6 +21,14 @@
     Public Function CLkel(vol1 As Double, kel As Double, vol2 As Double) As Double
         Return (vol1 * kel) / vol2
     End Function
+
+    Public Function BLvolch(vol1 As Double, pres1 As Double, pres2 As Double) As Double
+        Return (vol1 * pres1) / pres2
+    End Function
+
+    Public Function BLpresch(vol1 As Double, vol2 As Double, pres1 As Double) As Double
+        Return (vol1 * pres1) / vol2
+    End Function
 #End Region
 
 #Region "public directory functions"
@@ -41,6 +49,8 @@
                     ChemistryStoichMain()
                 Case "charlaw"
                     ChemistryCharlaw()
+                Case "boyllaw"
+                    ChemistryBoyllaw()
                 Case "help"
                     help()
                 Case "ls"
@@ -62,6 +72,8 @@
                           "stoic", "common stoichiometric formulas"))
         Console.WriteLine(String.Format("{0,15} {1,40}",
                           "charlaw", "Find volumes of gases from temp"))
+        Console.WriteLine(String.Format("{0,15} {1,40}",
+                          "boyllaw", "Find volumes/presure of an ideal gas"))
 
 
 
@@ -208,6 +220,73 @@
         Return "exit"
     End Function
 
+    Private Function ChemistryBoyllaw() As String
+        Dim sel As String
+        Dim input As String
+        Dim pres1, pres2, v, v2 As Double
 
+        While True
+            Console.Write(vbNewLine & "Viper_Chem_>BoylLaw: ")
+            sel = Console.ReadLine()
+            sel = sel.ToLower()
+
+            Select Case sel
+                Case "volch"
+                    Console.Write("    Enter inichal volume:  ")
+                    v = res.strToD(Console.ReadLine)
+                    Console.Write("    Enter inical pressure: ")
+                    pres1 = res.strToD(Console.ReadLine)
+                    Console.Write("    Enter final presure:   ")
+                    pres2 = res.strToD(Console.ReadLine)
+
+                    v = BLvolch(v, pres1, pres2)
+                    Console.WriteLine("the gass at " & v &
+                                      " will take up a space of " & v & "L")
+                Case "presch"
+                    Console.Write("    Enter inichal volume:  ")
+                    v = res.strToD(Console.ReadLine)
+                    Console.Write("    Enter inical pressure: ")
+                    pres1 = res.strToD(Console.ReadLine)
+                    Console.Write("    Enter final volume:    ")
+                    v2 = res.strToD(Console.ReadLine)
+
+                    v = BLpresch(v, v2, pres1)
+                    Console.WriteLine("Final volume is: " & v)
+                Case "calc"
+                    Console.Write(">>> ")
+                    input = Console.ReadLine
+                    Console.WriteLine(res.calc(input))
+                Case "clear"
+                    Console.Clear()
+                Case "cd"
+                    Return ""
+            End Select
+
+            If sel = "help" Or sel = "ls" Then
+                Console.WriteLine(
+                    "_________________________________________________________")
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "volch",
+                                  "find new volume of an ideal gas"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "presch",
+                                  "find presure of an ideal gas"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "calc",
+                                  "Simple calculater"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "cd",
+                                  "Return to parent directory"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "clear",
+                                  "Clear screen"))
+
+                Console.WriteLine(String.Format("{0,15} {1,40}", "", ""))
+            End If
+
+        End While
+
+        Return "exit"
+    End Function
 #End Region
 End Class
