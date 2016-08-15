@@ -12,8 +12,22 @@
 
     ' /////////////////////////////////////////////////////////////////////////
     Public Function changeDirectory(path As String) As String
+        Dim arr() As String
+
+        arr = path.Split(" ")
         Try
-            Return path.Split(" ")(1)
+            ' get the directory name
+            If arr(1).Length > 0 Then
+                Return arr(1)
+            Else
+                ' loop through the arry to find a command
+                For i As Integer = 1 To arr.Length
+                    If arr(i).Length > 0 Then
+                        Return arr(1)
+                    End If
+                Next
+            End If
+
         Catch ex As Exception
             Return parentDirecory
         End Try
@@ -29,7 +43,7 @@
         max = lst.Count
         mid = max / 2
 
-        ' do binary search to find element in Periodic table
+        ' do binary search to find a item in list
         While True
             If whatToFind = lst(mid) Then
                 Return lst(mid)
@@ -59,7 +73,7 @@
         max = lst.Count
         mid = max / 2
 
-        ' do binary search to find element in Periodic table
+        ' do binary search to find a item in list
         While True
             If whatToFind = lst(mid) Then
                 Return lst(mid)
@@ -79,6 +93,7 @@
         Return ""
     End Function
 
+    ' /////////////////////////////////////////////////////////////////////////
     Public Function strToD(raw As String) As Double
         Try
             Return Convert.ToDouble(raw)
@@ -87,6 +102,7 @@
         End Try
     End Function
 
+    ' /////////////////////////////////////////////////////////////////////////
     Public Function calc(rawLine As String)
         Dim arr() As String
         Dim action As String

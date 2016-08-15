@@ -44,8 +44,16 @@
         Return (finalVel - initVel) / acc
     End Function
 
-    Public Function spring_joule()
+    Public Function springJoule(Scons As Double, idis As Double, fdis As Double)
+        Return -0.5 * Scons * Math.Pow((fdis - idis), 2)
+    End Function
 
+    Public Function springSpringConst(jule As Double, fdis As Double, idis As Double) As Double
+        Return jule / (-0.5 * Math.Pow((fdis - idis), 2))
+    End Function
+
+    Public Function springFindDist(jule As Double, Scons As Double) As Double
+        Return Math.Sqrt(jule / (0.5 * Scons))
     End Function
 #End Region
 
@@ -67,6 +75,8 @@
             Select Case sel
                 Case "constacc"
                     consAccMain()
+                Case "springenergy"
+                    spring()
                 Case "help"
                     help()
                 Case "ls"
@@ -87,6 +97,9 @@
         Console.WriteLine(String.Format(
                           "{0,15} {1,40}",
                           "constAcc", "Constant acceleration problems"))
+        Console.WriteLine(String.Format(
+                          "{0,15} {1,40}",
+                          "springEnergy", "Find spring potental energy"))
 
 
         Console.WriteLine("")
@@ -125,12 +138,82 @@
                     vi = res.strToD(Console.ReadLine())
 
                     vf = consAcc_FITVA(vi, t, a)
-                    Console.WriteLine("Final velocity is: " & vf & vbNewLine)
+                    Console.WriteLine("Final velocity is: " &
+                                      vf.ToString("F5") & vbNewLine)
                 Case "ivelotim"
                 Case "cd"
                     Exit While
             End Select
         End While
     End Sub
+
+    ' /////////////////////////////////////////////////////////////////////////
+    Private Function spring() As String
+        Dim sel, tmp As String
+        Dim scons, iDis, fDis, ans As Double
+        Dim a, xi, xf As Double
+
+        While True
+            Console.Write(vbNewLine & "Viper_Science_Physics_>springenergy: ")
+            sel = Console.ReadLine()
+            sel = sel.ToLower()
+
+            If sel = "help" Or sel = "ls" Then
+                Console.WriteLine(
+            "_________________________________________________________")
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}",
+                                  "finddis", "inical velocity from time"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}",
+                                  "joule", "final velocity from time"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}",
+                                  "springcons", "inical velocity from time"))
+
+            End If
+
+            Select Case sel
+                Case "joule"
+                    Console.Write("    enter spring constant: ")
+                    scons = res.strToD(Console.ReadLine())
+                    Console.Write("    enter inital distance: ")
+                    iDis = res.strToD(Console.ReadLine())
+                    Console.Write("    enter final distance:  ")
+                    fDis = res.strToD(Console.ReadLine())
+
+                    ans = springJoule(scons, iDis, fDis)
+                    Console.WriteLine(
+                        vbNewLine & "the potntal energy of the spring is: " &
+                        ans & "j")
+                Case "springcons"
+                    Console.Write("    enter the number of joules: ")
+                    ans = res.strToD(Console.ReadLine())
+                    Console.Write("    enter inital distance:      ")
+                    iDis = res.strToD(Console.ReadLine())
+                    Console.Write("    enter final distance:       ")
+                    fDis = res.strToD(Console.ReadLine())
+
+                    ans = springSpringConst(ans, fDis, iDis)
+                    Console.WriteLine(
+                        vbNewLine & "the spring constant is: " &
+                        ans.ToString("F5") & "N/m")
+                Case "finddis"
+                    Console.Write("    enter the number of joules: ")
+                    ans = res.strToD(Console.ReadLine())
+                    Console.Write("    enter spring constant:      ")
+                    scons = res.strToD(Console.ReadLine())
+
+                    ans = springFindDist(ans, scons)
+                    Console.WriteLine(
+                        vbNewLine & "the distance traveled is: " &
+                        ans & "m")
+                Case "cd"
+                    Exit While
+            End Select
+        End While
+
+        Return "exit"
+    End Function
 #End Region
 End Class

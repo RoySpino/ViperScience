@@ -18,16 +18,33 @@
         Return (vol1 * kel2) / kel1
     End Function
 
+    ' /////////////////////////////////////////////////////////////////////////
     Public Function CLkel(vol1 As Double, kel As Double, vol2 As Double) As Double
         Return (vol1 * kel) / vol2
     End Function
 
+    ' /////////////////////////////////////////////////////////////////////////
     Public Function BLvolch(vol1 As Double, pres1 As Double, pres2 As Double) As Double
         Return (vol1 * pres1) / pres2
     End Function
 
+    ' /////////////////////////////////////////////////////////////////////////
     Public Function BLpresch(vol1 As Double, vol2 As Double, pres1 As Double) As Double
         Return (vol1 * pres1) / vol2
+    End Function
+    ' /////////////////////////////////////////////////////////////////////////
+    Public Function ElecPlateTime(elec As Double, g As Double, metal As String, volt As Double) As Double
+        Dim aloy As formula = New formula(metal)
+        Return (elec * g * (1 / aloy.getMol()) * 96485) / volt
+    End Function
+
+    Public Function ElecPlateAtom(elec As Double, g As Double, volt As Double, time As Double) As Double
+        Return 1 / ((time * volt) / (elec * g * 96485))
+    End Function
+
+    Public Function ElecPlateGram(elec As Double, metal As String, volt As Double, time As Double) As Double
+        Dim aloy As formula = New formula(metal)
+        Return ((time * volt) / (96485 * (1 / aloy.getMol) * elec))
     End Function
 #End Region
 
@@ -51,6 +68,8 @@
                     ChemistryCharlaw()
                 Case "boyllaw"
                     ChemistryBoyllaw()
+                Case "elecplat"
+                    elecplat()
                 Case "help"
                     help()
                 Case "ls"
@@ -69,11 +88,14 @@
         Console.WriteLine(
             "_________________________________________________________")
         Console.WriteLine(String.Format("{0,15} {1,40}",
-                          "stoic", "common stoichiometric formulas"))
-        Console.WriteLine(String.Format("{0,15} {1,40}",
                           "charlaw", "Find volumes of gases from temp"))
         Console.WriteLine(String.Format("{0,15} {1,40}",
                           "boyllaw", "Find volumes/presure of an ideal gas"))
+        Console.WriteLine(String.Format("{0,15} {1,40}",
+                          "elecplat", "Find the time/amout for electroplating"))
+        Console.WriteLine(String.Format("{0,15} {1,40}",
+                          "stoic", "common stoichiometric formulas"))
+        '
 
 
 
@@ -107,7 +129,8 @@
                     input = Console.ReadLine()
 
                     Console.WriteLine(
-                        "the molar weight of the compound is: " & molmas(input))
+                        "the molar weight of the compound is: " &
+                        (molmas(input)).ToString("F5"))
                 Case "calc"
                     Console.Write(">>> ")
                     input = Console.ReadLine
@@ -170,8 +193,9 @@
                     k2 = res.strToD(Console.ReadLine)
 
                     v = CLVol(v, k2, k1)
-                    Console.WriteLine("the gass at " & k2 &
-                                      " will take up a space of " & v & "L")
+                    Console.WriteLine("the gass at " & k2.ToString("F5") &
+                                      " will take up a space of " &
+                                      v.ToString("F5") & "L")
                 Case "kel"
                     Console.Write("    Enter inical temp in kelven: ")
                     k1 = res.strToD(Console.ReadLine)
@@ -181,8 +205,9 @@
                     v2 = res.strToD(Console.ReadLine)
 
                     k1 = CLkel(v, k1, v2)
-                    Console.WriteLine("the gass at " & k1 &
-                                      " will take up a space of " & v & "L")
+                    Console.WriteLine("the gass at " & k1.ToString("F5") &
+                                      " will take up a space of " &
+                                      v.ToString("F5") & "L")
                 Case "calc"
                     Console.Write(">>> ")
                     input = Console.ReadLine
@@ -240,8 +265,9 @@
                     pres2 = res.strToD(Console.ReadLine)
 
                     v = BLvolch(v, pres1, pres2)
-                    Console.WriteLine("the gass at " & v &
-                                      " will take up a space of " & v & "L")
+                    Console.WriteLine("the gass at " & v.ToString("F5") &
+                                      " will take up a space of " &
+                                      v.ToString("F5") & "L")
                 Case "presch"
                     Console.Write("    Enter inichal volume:  ")
                     v = res.strToD(Console.ReadLine)
@@ -251,7 +277,8 @@
                     v2 = res.strToD(Console.ReadLine)
 
                     v = BLpresch(v, v2, pres1)
-                    Console.WriteLine("Final volume is: " & v)
+                    Console.WriteLine("Final pressure is: " &
+                                      v.ToString("F5"))
                 Case "calc"
                     Console.Write(">>> ")
                     input = Console.ReadLine
@@ -271,6 +298,100 @@
                 Console.WriteLine(
                     String.Format("{0,15} {1,40}", "presch",
                                   "find presure of an ideal gas"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "calc",
+                                  "Simple calculater"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "cd",
+                                  "Return to parent directory"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "clear",
+                                  "Clear screen"))
+
+                Console.WriteLine(String.Format("{0,15} {1,40}", "", ""))
+            End If
+
+        End While
+
+        Return "exit"
+    End Function
+
+    Private Function elecplat() As String
+        Dim sel As String
+        Dim input, aloy As String
+        Dim elec, g, volt, ans, time As Double
+
+        While True
+            Console.Write(vbNewLine & "Viper_Chem_>Elecplat: ")
+            sel = Console.ReadLine()
+            sel = sel.ToLower()
+
+            Select Case sel
+                Case "time"
+                    Console.Write("    enter moles of -e:                ")
+                    elec = res.strToD(Console.ReadLine)
+                    Console.Write("    enter grames deposited:           ")
+                    g = res.strToD(Console.ReadLine)
+                    Console.Write("    enter atomic symbol/aloy formula: ")
+                    aloy = Console.ReadLine
+                    Console.Write("    enter the volts:                  ")
+                    volt = res.strToD(Console.ReadLine)
+
+                    ans = ElecPlateTime(elec, g, aloy, volt)
+                    Console.WriteLine(
+                        vbNewLine & "to deposit " & g &
+                        "of material you must wait " &
+                        ans.ToString("F5") & "s")
+                Case "atom"
+                    Console.Write("    enter moles of -e:           ")
+                    elec = res.strToD(Console.ReadLine)
+                    Console.Write("    enter grames deposited:      ")
+                    g = res.strToD(Console.ReadLine)
+                    Console.Write("    enter time for prosess:      ")
+                    time = res.strToD(Console.ReadLine)
+                    Console.Write("    enter the volts:             ")
+                    volt = res.strToD(Console.ReadLine)
+
+                    ans = ElecPlateAtom(elec, g, volt, time)
+                    Console.WriteLine(
+                        vbNewLine & "the atomic waight of" &
+                        " deposited material is " & ans.ToString("F5"))
+                Case "gram"
+                    Console.Write("    enter moles of -e:                ")
+                    elec = res.strToD(Console.ReadLine)
+                    Console.Write("    enter atomic symbol/aloy formula: ")
+                    aloy = Console.ReadLine
+                    Console.Write("    enter time for prosess:           ")
+                    time = res.strToD(Console.ReadLine)
+                    Console.Write("    enter the volts:                  ")
+                    volt = res.strToD(Console.ReadLine)
+
+                    ans = ElecPlateGram(elec, aloy, volt, time)
+                    Console.WriteLine(
+                        vbNewLine & "the amout of deposited meterial is " &
+                        ans.ToString("F5") & "g")
+                Case "calc"
+                    Console.Write(">>> ")
+                    input = Console.ReadLine
+                    Console.WriteLine(res.calc(input))
+                Case "clear"
+                    Console.Clear()
+                Case "cd"
+                    Return ""
+            End Select
+
+            If sel = "help" Or sel = "ls" Then
+                Console.WriteLine(
+                    "_________________________________________________________")
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "atom",
+                                  "find atomiMcass of electroplated mater"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "gram",
+                                  "find grams of electroplat material"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "time",
+                                  "find time to electroplate the object"))
                 Console.WriteLine(
                     String.Format("{0,15} {1,40}", "calc",
                                   "Simple calculater"))
