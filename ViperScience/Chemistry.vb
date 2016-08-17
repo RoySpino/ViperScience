@@ -46,6 +46,30 @@
         Dim aloy As formula = New formula(metal)
         Return ((time * volt) / (96485 * (1 / aloy.getMol) * elec))
     End Function
+
+    Public Function HToPH(h As Double) As Double
+        Return -1 * (Math.Log(h) / Math.Log(10))
+    End Function
+
+    Public Function HToPOH(h As Double) As Double
+        Return 14 - HToPH(h)
+    End Function
+
+    Public Function HToOH(h As Double) As Double
+        Return Math.Pow(10, (-1 * HToPOH(h)))
+    End Function
+
+    Public Function PhToPOH(ph As Double) As Double
+        Return 14 - ph
+    End Function
+
+    Public Function PhToOH(ph As Double) As Double
+        Return Math.Pow(10, (-1 * PhToPOH(ph)))
+    End Function
+
+    Public Function PhToH(ph As Double) As Double
+        Return 0.00000000000001 / PhToOH(ph)
+    End Function
 #End Region
 
 #Region "public directory functions"
@@ -70,6 +94,8 @@
                     ChemistryBoyllaw()
                 Case "elecplat"
                     elecplat()
+                Case "ph"
+                    ph()
                 Case "help"
                     help()
                 Case "ls"
@@ -95,7 +121,8 @@
                           "elecplat", "Find the time/amout for electroplating"))
         Console.WriteLine(String.Format("{0,15} {1,40}",
                           "stoic", "common stoichiometric formulas"))
-        '
+        Console.WriteLine(String.Format("{0,15} {1,40}",
+                          "ph", "Find pH/[H]/[pOH]/pOH"))
 
 
 
@@ -245,6 +272,7 @@
         Return "exit"
     End Function
 
+    ' /////////////////////////////////////////////////////////////////////////
     Private Function ChemistryBoyllaw() As String
         Dim sel As String
         Dim input As String
@@ -316,6 +344,7 @@
         Return "exit"
     End Function
 
+    ' /////////////////////////////////////////////////////////////////////////
     Private Function elecplat() As String
         Dim sel As String
         Dim input, aloy As String
@@ -392,6 +421,116 @@
                 Console.WriteLine(
                     String.Format("{0,15} {1,40}", "time",
                                   "find time to electroplate the object"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "calc",
+                                  "Simple calculater"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "cd",
+                                  "Return to parent directory"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "clear",
+                                  "Clear screen"))
+
+                Console.WriteLine(String.Format("{0,15} {1,40}", "", ""))
+            End If
+
+        End While
+
+        Return "exit"
+    End Function
+
+    ' /////////////////////////////////////////////////////////////////////////
+    Private Function ph() As String
+        Dim sel As String
+        Dim input As String
+        Dim h, p_h, poh, oh As Double
+
+        While True
+            Console.Write(vbNewLine & "Viper_Chem_>Ph: ")
+            sel = Console.ReadLine()
+            sel = sel.ToLower()
+
+            Select Case sel
+                Case "h-ph"
+                    Console.Write("    [H] to pH" & vbNewLine &
+                                  "    ______________________________________" &
+                                  vbNewLine &
+                                  "    enter h consentration: ")
+                    h = res.strToD(Console.ReadLine)
+
+                    p_h = HToPH(h)
+                    Console.WriteLine(vbNewLine & "The ph is " & p_h & vbNewLine)
+                Case "h-ph-a"
+                    Console.Write("    [H] to pH all" & vbNewLine &
+                                  "    ______________________________________" &
+                                  vbNewLine &
+                                  "    enter h consentration: ")
+                    h = res.strToD(Console.ReadLine)
+
+                    p_h = HToPH(h)
+                    oh = HToOH(h)
+                    poh = HToPOH(h)
+                    Console.WriteLine(" ______________________" &
+                         vbNewLine & "| pH <<  " & p_h & vbNewLine &
+                         "| pOH << " & poh & vbNewLine &
+                         "| [OH] <<  " & oh & vbNewLine &
+                         "| [h] <<   " & h)
+                Case "ph-poh"
+                    Console.Write("    ph to POh" & vbNewLine &
+                                  "    ______________________________________" &
+                                  vbNewLine &
+                                  "    enter h consentration: ")
+                    p_h = res.strToD(Console.ReadLine)
+
+                    If p_h < 0 Or p_h > 14 Then
+                        Console.WriteLine("<<INVALID ENTRY: must be between 0 and 14 >>")
+                        Exit Select
+                    End If
+
+                    poh = PhToPOH(p_h)
+                    Console.WriteLine("npOH is " & poh)
+                Case "ph-poh-a"
+                    Console.Write("    ph to POh all" & vbNewLine &
+                                  "    ______________________________________" &
+                                  vbNewLine &
+                                  "    enter h consentration: ")
+                    p_h = res.strToD(Console.ReadLine)
+
+                    poh = PhToPOH(p_h)
+                    oh = PhToOH(p_h)
+                    h = PhToH(p_h)
+
+                    Console.WriteLine(" ______________________" &
+                         vbNewLine & "| pH <<  " & p_h & vbNewLine &
+                         "| pOH << " & poh & vbNewLine &
+                         "| [OH] <<  " & oh & vbNewLine &
+                         "| [h] <<   " & h)
+                Case "calc"
+                    Console.Write(">>> ")
+                    input = Console.ReadLine
+                    Console.WriteLine(res.calc(input))
+                Case "clear"
+                    Console.Clear()
+                Case "cd"
+                    Return ""
+            End Select
+
+            If sel = "help" Or sel = "ls" Then
+                Console.WriteLine(
+                    "_________________________________________________________")
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "h-ph",
+                                  "find ph from [H] -a to find all values"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "ph-poh",
+                                  "find pOH from pH -a to find all values"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "poh-oh",
+                                  "find [OH] from pOH -a to find all values"))
+                Console.WriteLine(
+                    String.Format("{0,15} {1,40}", "oh-h",
+                                  "find [H] from [OH] -a to find all values"))
+
                 Console.WriteLine(
                     String.Format("{0,15} {1,40}", "calc",
                                   "Simple calculater"))
