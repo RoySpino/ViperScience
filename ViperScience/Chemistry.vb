@@ -70,6 +70,29 @@
     Public Function PhToH(ph As Double) As Double
         Return 0.00000000000001 / PhToOH(ph)
     End Function
+
+    Public Function OhToH(oh As Double)
+        Return 0.00000000000001 / oh
+    End Function
+
+    Public Function OhToPh(oh As Double)
+        Return -1 * (Math.Log(OhToH(oh) / Math.Log(10)))
+    End Function
+
+    Public Function OhToPoh(oh As Double)
+        Return 14 - OhToPh(oh)
+    End Function
+
+    Public Function pohToOh(poh As Double)
+        Return Math.Pow(10, (-1 * poh))
+    End Function
+
+    Public Function PohToH(poh As Double)
+        Return 0.00000000000001 / pohToOh(ph)
+    End Function
+    Public Function PohToPh(poh As Double)
+        Return -1 * (Math.Log(PohToH(poh)) / Math.Log(10))
+    End Function
 #End Region
 
 #Region "public directory functions"
@@ -505,6 +528,54 @@
                          "| pOH << " & poh & vbNewLine &
                          "| [OH] <<  " & oh & vbNewLine &
                          "| [h] <<   " & h)
+                Case "oh-h"
+                    Console.Write("    [OH] to [H]" & vbNewLine &
+                                  "    ______________________________________" &
+                                  vbNewLine &
+                                  "    enter [OH]: ")
+                    oh = res.strToD(Console.ReadLine)
+                    h = OhToH(oh)
+                    Console.WriteLine("consentration of [H] is " & h)
+                Case "oh-h-a"
+                    Console.Write("    [OH] to [H]" & vbNewLine &
+                                  "    ______________________________________" &
+                                  vbNewLine &
+                                  "    enter [OH]: ")
+                    oh = res.strToD(Console.ReadLine)
+
+                    poh = OhToPoh(oh)
+                    p_h = OhToPh(oh)
+                    h = OhToH(oh)
+
+                    Console.WriteLine(" ______________________" &
+                         vbNewLine & "| pH <<  " & p_h & vbNewLine &
+                         "| pOH << " & poh & vbNewLine &
+                         "| [OH] <<  " & oh & vbNewLine &
+                         "| [h] <<   " & h)
+
+                Case "poh-oh"
+                    Console.Write("    pOH to [OH]" & vbNewLine &
+                                  "    ______________________________________" &
+                                  vbNewLine &
+                                  "    enter pOH: ")
+                    poh = res.strToD(Console.ReadLine)
+                    oh = pohToOh(poh)
+                    Console.WriteLine("the OH consentration is " & oh)
+                Case "poh-oh-a"
+                    Console.Write("    pOH to [OH]" & vbNewLine &
+                                  "    ______________________________________" &
+                                  vbNewLine &
+                                  "    enter pOH: ")
+                    poh = res.strToD(Console.ReadLine)
+                    p_h = PohToPh(poh)
+                    oh = pohToOh(poh)
+                    h = PohToH(poh)
+
+                    Console.WriteLine(" ______________________" &
+                        vbNewLine & "| pH <<  " & p_h & vbNewLine &
+                        "| pOH << " & poh & vbNewLine &
+                        "| [OH] <<  " & oh & vbNewLine &
+                        "| [h] <<   " & h)
                 Case "calc"
                     Console.Write(">>> ")
                     input = Console.ReadLine
