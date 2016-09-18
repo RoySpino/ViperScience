@@ -44,16 +44,30 @@
         Return (finalVel - initVel) / acc
     End Function
 
+    ' ////////////////////////////////////////////////////////////////////////////
     Public Function springJoule(Scons As Double, idis As Double, fdis As Double)
         Return -0.5 * Scons * Math.Pow((fdis - idis), 2)
     End Function
 
+    ' ////////////////////////////////////////////////////////////////////////////
     Public Function springSpringConst(jule As Double, fdis As Double, idis As Double) As Double
         Return jule / (-0.5 * Math.Pow((fdis - idis), 2))
     End Function
 
+    ' ////////////////////////////////////////////////////////////////////////////
     Public Function springFindDist(jule As Double, Scons As Double) As Double
         Return Math.Sqrt(jule / (0.5 * Scons))
+    End Function
+
+    ' ////////////////////////////////////////////////////////////////////////////
+    Public Function ssoundAirF(t As Double) As Double
+        ' speed of sound in air
+        Return 331.4 + 0.6 * res.FtoC(t)
+    End Function
+    ' ////////////////////////////////////////////////////////////////////////////
+    Public Function ssoundAirC(t As Double) As Double
+        ' speed of sound in air
+        Return 331.4 + 0.6 * t
     End Function
 #End Region
 

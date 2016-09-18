@@ -158,4 +158,21 @@
                     Convert.ToDouble(tmp2)
         End Select
     End Function
+
+    ' ////////////////////////////////////////////////////////////////////////////
+    Public Function FtoC(t As Double) As Double
+        Return (t - 32) * 0.5555555556
+    End Function
+    ' ////////////////////////////////////////////////////////////////////////////
+    Public Function CtoF(t As Double) As Double
+        Return t * 1.8 + 32
+    End Function
+
+    Public Function CtoR(t As Double) As Double
+        Return t * 1.8 + 491.67
+    End Function
+
+    Public Function FtoR(t As Double) As Double
+        Return t - 459.67
+    End Function
 End Class
